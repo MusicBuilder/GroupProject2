@@ -1,0 +1,39 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>GroupProject2</title>
+		<link rel="shortcut icon" type="image/png" href="http://wes.io/ehRe/my-favourite-icon.png"/>
+	  <script src="https://unpkg.com/react@15.3.0/dist/react.js"></script> 
+     <script src="https://unpkg.com/react-dom@15.3.0/dist/react-dom.js"></script> 
+     <script src="https://unpkg.com/babel-standalone@6.15.0/babel.min.js"></script> 
+     <script src="https://unpkg.com/jquery@3.1.0/dist/jquery.min.js"></script> 
+     <script src="https://unpkg.com/remarkable@1.6.2/dist/remarkable.min.js"></script> 
+
+  </head>
+  <body>
+   <H1>Render the Photo component here </H1>
+    <div id="root"></div>
+     <script type="text/babel">
+	
+ var CommentBox = React.createClass({  
+ render: function() { 
+    
+     return ( 
+       <div className="commentList"> 
+         {this.props.data} 
+       </div> 
+     ); 
+  } 
+}); 
+
+   ReactDOM.render(
+		  <CommentBox data="hey"/>,
+		  document.getElementById('root')
+		);
+
+
+	
+	</script>
+  </body>
+</html>
