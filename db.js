@@ -1,17 +1,31 @@
+var fs = require('fs');
 var sqlite3 = require('sqlite3').verbose();
 
 var db = new sqlite3.Database('instagramma.db');
 
-// Exports Go Here
+exports.deleteDB=deleteDB;
+exports.deleteDBContents=deleteDBContents;
 
-
-
-function initDB(db) {
-    db.serialize(function () {
-
+function deleteDB(db)
+{
         db.run("DROP TABLE users", function (err) { if (err) { } });
+        db.run("DROP TABLE images", function (err) { if (err) { } });
+        db.run("DROP TABLE imageLike", function (err) { if (err) { } }); //x
+        db.run("DROP TABLE imageComments", function (err) { if (err) { } }); //x
+}
+function deleteDBContents()
+{
+        db.run("DELETE from imageLike", function (err) { if (err) { } }); //x
+        db.run("DELETE from imageComments", function (err) { if (err) { } }); //x
+        db.run("DELETE from images", function (err) { if (err) { } });
+        db.run("DELETE from users", function (err) { if (err) { } });
+}
+function initDB(db) {
+    if (fs.existsSync('instagramma.db')) return;
+
+    db.serialize(function () {
         console.log("create users table");
-        db.run("CREATE TABLE users \
+        db.run("CREATE TABLE users IF NOT EXISTS \
         (USER_PK INTEGER PRIMARY KEY NOT NULL, \
         UNAME TEXT UNIQUE NOT NULL, \
         NAME TEXT NOT NULL, \
@@ -19,9 +33,8 @@ function initDB(db) {
         EMAIL TEXT)", function (err) { if (err) { console.log(err); } });
     });
     db.serialize(function () {
-        db.run("DROP TABLE images", function (err) { if (err) { } });
         console.log("create images table");
-        db.run("CREATE TABLE images \
+        db.run("CREATE TABLE images IF NOT EXISTS \
         (IMAGE_PK INTEGER PRIMARY KEY NOT NULL, \
         IMAGE_TITLE TEXT, \
         IMAGEBYTES BLOBL, \
@@ -30,10 +43,8 @@ function initDB(db) {
         FOREIGN KEY (USER_FK) REFERENCES users(USER_PK))", function (err) { if (err) { console.log(err); } });
     });
     db.serialize(function () {
-
-        db.run("DROP TABLE imageLike", function (err) { if (err) { } }); //x
         console.log("create imageLike table");
-        db.run("CREATE TABLE imageLike \
+        db.run("CREATE TABLE imageLike IF NOT EXISTS \
         (LIKE_PK INTEGER PRIMARY KEY NOT NULL, \
         USER_FK INTEGER, \
         IMAGE_FK INTEGER,\
@@ -42,10 +53,8 @@ function initDB(db) {
         FOREIGN KEY (IMAGE_FK) REFERENCES images(IMAGE_PK))", function (err) { if (err) { console.log(err); } });
     });
     db.serialize(function () {
-
-        db.run("DROP TABLE imageComments", function (err) { if (err) { } }); //x
         console.log("create imageComments table");
-        db.run("CREATE TABLE imageComments \
+        db.run("CREATE TABLE imageComments IF NOT EXISTS \
         (CMT_PK INTEGER PRIMARY KEY NOT NULL, \
         MESSAGE TEXT NOT NULL, \
         USER_FK INT NOT NULL, \
